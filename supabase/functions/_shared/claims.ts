@@ -4,6 +4,7 @@ import {
   jwtVerify,
 } from "https://deno.land/x/jose@v5.2.2/index.ts";
 
+// TODO: Import from config
 const JWKS = createRemoteJWKSet(
   new URL("https://capital-roughy-31.clerk.accounts.dev/.well-known/jwks.json"),
 );
