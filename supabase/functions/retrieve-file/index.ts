@@ -22,26 +22,32 @@ Deno.serve(async (req) => {
   }
 
   const url = new URL(req.url);
-  const fileName = url.searchParams.get("name");
+  const filePath = url.searchParams.get("path");
 
-  console.log("FILE NAME IS", fileName);
-
-  if (!fileName) {
-    return new Response("File name is missing", { status: 400 });
+  if (!filePath) {
+    return new Response("File path is missing", { status: 400 });
   }
 
   const claims = getClaims(req)!;
+  const [fileFolder] = filePath.split("/");
+
+  // TODO: Retrieve DB entry instead and check sub with ownerId (or organizationId)
+  if (claims.sub !== fileFolder) {
+    return new Response(null, { status: 403 });
+  }
+
   const adminSupabaseClient = getAdminSupabaseClient();
 
+  // TODO: Look up the file in our DB (filter by virtual_name)
   // TODO: Check if user has permissions
 
   // We used signed URL because this returns the appropriate headers, unlike the download method.
   // The signed URL has a very short life-span (30s) so it expires after we return the result.
   const { data: signedUrlData, error: signedUrlError } =
     await adminSupabaseClient.storage.from("vault")
-      .createSignedUrl(`${claims.sub}/${fileName}`, 30, {
+      .createSignedUrl(filePath, 120, {
         transform: {
-          format: "origin",
+          // format: "origin",
           quality: url.searchParams.get("q")
             ? parseInt(url.searchParams.get("q")!)
             : undefined,
