@@ -1,34 +1,34 @@
 -- Disable RLS for 'anon' role
 -- https://github.com/orgs/supabase/discussions/4547
-ALTER DEFAULT PRIVILEGES 
-IN SCHEMA public 
-REVOKE ALL ON TABLES 
-FROM anon;
+-- ALTER DEFAULT PRIVILEGES 
+-- IN SCHEMA public 
+-- REVOKE ALL ON TABLES 
+-- FROM anon;
 
-ALTER DEFAULT PRIVILEGES 
-IN SCHEMA public 
-REVOKE ALL ON FUNCTIONS 
-FROM anon;
+-- ALTER DEFAULT PRIVILEGES 
+-- IN SCHEMA public 
+-- REVOKE ALL ON FUNCTIONS 
+-- FROM anon;
 
-ALTER DEFAULT PRIVILEGES 
-IN SCHEMA public 
-REVOKE ALL ON SEQUENCES 
-FROM anon;
+-- ALTER DEFAULT PRIVILEGES 
+-- IN SCHEMA public 
+-- REVOKE ALL ON SEQUENCES 
+-- FROM anon;
 
-REVOKE SELECT 
-ON ALL TABLES 
-IN SCHEMA public 
-FROM anon;
+-- REVOKE SELECT 
+-- ON ALL TABLES 
+-- IN SCHEMA public 
+-- FROM anon;
 
-REVOKE USAGE 
-ON ALL SEQUENCES 
-IN SCHEMA public 
-FROM anon;
+-- REVOKE USAGE 
+-- ON ALL SEQUENCES 
+-- IN SCHEMA public 
+-- FROM anon;
 
-REVOKE EXECUTE 
-ON ALL FUNCTIONS 
-IN SCHEMA public 
-FROM anon;
+-- REVOKE EXECUTE 
+-- ON ALL FUNCTIONS 
+-- IN SCHEMA public 
+-- FROM anon;
 
 -- Create function that retrieves the JWT claims from the JWT token (used in Storage RLS)
 CREATE OR REPLACE FUNCTION requesting_user_id()
