@@ -30,6 +30,8 @@
 -- IN SCHEMA public 
 -- FROM anon;
 
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- Create function that retrieves the JWT claims from the JWT token (used in Storage RLS)
 CREATE OR REPLACE FUNCTION requesting_user_id()
 RETURNS TEXT 
