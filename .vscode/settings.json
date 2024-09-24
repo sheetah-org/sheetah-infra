@@ -12,6 +12,7 @@
     "inbucket",
     "JWKS",
     "pooler",
-    "sheetah"
+    "sheetah",
+    "trgm"
   ]
 }
