@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
   // TODO: Transforms might not work properly locally: https://github.com/supabase/supabase/issues/21645
   // We used signed URL because this returns the appropriate headers, unlike the download method.
   // The signed URL has a very short life-span (30s) so it expires after we return the result.
+  // TODO: Pass bucket as a query param?
   const { data: signedUrlData, error: signedUrlError } =
     await adminSupabaseClient.storage.from("vault")
       .createSignedUrl(filePath, 120, {
