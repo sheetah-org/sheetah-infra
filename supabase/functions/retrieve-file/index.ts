@@ -31,15 +31,13 @@ Deno.serve(async (req) => {
   const claims = getClaims(req)!;
   const [fileFolder] = filePath.split("/");
 
-  // TODO: Retrieve DB entry instead and check sub with ownerId (or organizationId)
-  if (claims.sub !== fileFolder) {
+  if (claims.sub !== fileFolder && claims.org_id !== fileFolder) {
     return new Response(null, { status: 403 });
   }
 
   const adminSupabaseClient = getAdminSupabaseClient();
 
-  // TODO: Look up the file in our DB (filter by virtual_name)
-  // TODO: Check if user has permissions
+  // TODO: Retrieve the file from our DB (filter by virtual_name) to check if user has permissions (required for more granular access)
 
   // TODO: Transforms might not work properly locally: https://github.com/supabase/supabase/issues/21645
   // We used signed URL because this returns the appropriate headers, unlike the download method.

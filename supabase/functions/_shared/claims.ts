@@ -1,6 +1,7 @@
 import {
   createRemoteJWKSet,
   decodeJwt,
+  JWTPayload,
   jwtVerify,
 } from "https://deno.land/x/jose@v5.2.2/index.ts";
 
@@ -8,6 +9,8 @@ import {
 const JWKS = createRemoteJWKSet(
   new URL("https://capital-roughy-31.clerk.accounts.dev/.well-known/jwks.json"),
 );
+
+export type Claims = JWTPayload & { org_id: string; org_role: string };
 
 export const getJwt = (req: Request) => {
   const bearerToken = req.headers.get("Authorization")!;
@@ -21,7 +24,7 @@ export const getClaims = (req: Request) => {
   if (!jwt) return null;
 
   const claims = decodeJwt(jwt);
-  return claims;
+  return claims as Claims;
 };
 
 export const verifyJwt = async (req: Request) => {
