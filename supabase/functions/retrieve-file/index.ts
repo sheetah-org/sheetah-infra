@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
   // The signed URL has a very short life-span (30s) so it expires after we return the result.
   // TODO: Pass bucket as a query param?
   const { data: signedUrlData, error: signedUrlError } =
-    await adminSupabaseClient.storage.from("vault")
+    await adminSupabaseClient.storage.from("storage")
       .createSignedUrl(filePath, 120, {
         transform: {
           format: "origin",
