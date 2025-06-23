@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
   const claims = getClaims(req)!;
   const [fileFolder] = filePath.split("/");
 
-  if (claims.sub !== fileFolder && claims.org_id !== fileFolder) {
+  if (claims.sub !== fileFolder && claims.o?.id !== fileFolder) {
     return new Response(null, { status: 403 });
   }
 

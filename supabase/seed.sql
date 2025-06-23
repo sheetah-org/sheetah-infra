@@ -38,14 +38,14 @@ CREATE OR REPLACE FUNCTION requesting_user_id()
 RETURNS TEXT 
 LANGUAGE SQL STABLE
 AS $$
-SELECT nullif(current_setting('request.jwt.claims', true)::json->>'sub', '')::text;
+SELECT nullif((select auth.jwt()->>'sub'), '')::text;
 $$;
 
 CREATE OR REPLACE FUNCTION requesting_user_org_id()
 RETURNS TEXT 
 LANGUAGE SQL STABLE
 AS $$
-SELECT nullif(current_setting('request.jwt.claims', true)::json->>'org_id', '')::text;
+SELECT nullif((select auth.jwt()->'o'->>'id'), '')::text;
 $$;
 
 -- Seed 'storage' bucket with RLS policies

@@ -7,7 +7,7 @@ import {
 
 // TODO: Import from config
 const JWKS = createRemoteJWKSet(
-  new URL("https://capital-roughy-31.clerk.accounts.dev/.well-known/jwks.json"),
+  new URL(Deno.env.get("CLERK_JWKS_URL")),
 );
 
 export type Claims = JWTPayload & { org_id: string; org_role: string };
