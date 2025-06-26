@@ -1,4 +1,9 @@
-To invoke locally:
+## Setup
+
+1. Create an `.env` (for local development) from the `.env.example` template file and fill in the custom env vars
+  - Function automatically load env vars from the '.env' file located inside the `functions` folder
+
+## To invoke a function locally
 
 1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
 2. Make an HTTP request:

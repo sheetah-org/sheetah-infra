@@ -142,6 +142,11 @@ redirect_uri = ""
 # or any other third-party OIDC providers.
 url = ""
 
+# Enable Clerk.js as a third-party auth provider for local Supabase
+[auth.third_party.clerk]
+enabled = true
+domain = "env(CLERK_DOMAIN)"
+
 [analytics]
 enabled = true
 port = 54327
