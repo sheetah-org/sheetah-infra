@@ -1,0 +1,9 @@
+version: "3.7"
+name: "sheetah"
+services:
+  redis:
+    container_name: sheetah-redis
+    image: redis:7.4.1
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
