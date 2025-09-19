@@ -12,12 +12,18 @@ export async function postSentryAlertToSlack(
 ): Promise<Response | null> {
 	const { env, webhook } = args;
 
-	if (!webhook) return null;
+	if (!webhook) {
+		console.warn("Missing Slack webhook");
+		return null;
+	}
 
 	const token = env.SLACK_BOT_TOKEN;
 	const channel = args.channel;
 
-	if (!token || !channel) return null;
+	if (!token || !channel) {
+		console.warn("Missing Slack bot token or channel");
+		return null;
+	}
 
 	const issue: SentryIssue = webhook.data.issue;
 	const level: string | undefined = issue.level;
