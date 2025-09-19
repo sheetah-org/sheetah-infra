@@ -21,39 +21,48 @@ export default {
 			return new Response("Method not allowed", { status: 405 });
 		}
 
+		const signature = request.headers.get("Sentry-Hook-Signature");
+		if (!signature) {
+			console.error("Missing Sentry-Hook-Signature");
+			return new Response("Missing Sentry-Hook-Signature", { status: 401 });
+		}
+
 		// Validate Sentry Issue Alert webhook per docs
 		// https://docs.sentry.io/organization/integrations/integration-platform/webhooks/issue-alerts/
 		const hookResource = request.headers.get("Sentry-Hook-Resource");
-		if (hookResource !== "event_alert") {
-			return new Response("Unsupported Sentry-Hook-Resource", {
+		if (hookResource !== "issue") {
+			console.error(`Unsupported Sentry-Hook-Resource: ${hookResource}`);
+			return new Response(`Unsupported Sentry-Hook-Resource: ${hookResource}`, {
 				status: 400,
 			});
 		}
 
+		const rawPayload = await request.text();
 		let payload: SentryIssueAlertWebhook;
 		try {
-			payload = (await request.json()) as SentryIssueAlertWebhook;
+			payload = JSON.parse(rawPayload) as SentryIssueAlertWebhook;
 		} catch {
-			return new Response("Invalid JSON", { status: 400 });
+			console.error("Invalid JSON payload");
+			return new Response("Invalid JSON payload", { status: 400 });
 		}
 
-		// Minimal shape check
+		// Minimal shape check (expecting issue-style payload)
 		const action = payload?.action;
 		const data = payload?.data;
-		if (action !== "triggered" || typeof data !== "object") {
-			return new Response("Invalid payload", { status: 400 });
+		if (
+			action !== "created" || typeof data !== "object" || !(data as any).issue
+		) {
+			console.error(`Invalid payload for action: ${action}`);
+			return new Response(`Invalid payload for action: ${action}`, {
+				status: 400,
+			});
 		}
 
 		// Verify Sentry webhook signature
 		const secret = env?.SENTRY_WEBHOOK_SECRET as string | undefined;
 		if (secret) {
-			const requestForVerification = new Request(request.url, {
-				method: request.method,
-				headers: request.headers,
-				body: JSON.stringify(payload),
-			});
-
-			if (!verifySignature(requestForVerification, secret)) {
+			if (!(await verifySignature(signature, rawPayload, secret))) {
+				console.error("Invalid signature");
 				return new Response("Invalid signature", { status: 401 });
 			}
 		}

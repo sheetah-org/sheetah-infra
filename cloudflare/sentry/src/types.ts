@@ -57,168 +57,68 @@ export interface SentryEventMetadata {
 	[id: string]: unknown;
 }
 
-export interface SentryEvent {
-	_ref?: number;
-	_ref_version?: number;
-	contexts?: Record<string, unknown>;
-	culprit?: string | null;
-	datetime?: string; // ISO
-	dist?: string | null;
-	event_id: string;
-	exception?: unknown;
-	fingerprint?: string[];
-	grouping_config?: Record<string, unknown>;
-	hashes?: string[];
-	issue_url?: string; // not in docs, keep optional
-	issue_id?: string; // not in docs, keep optional
-	issue?: unknown;
-	issue_id_alias?: unknown;
-	issue_id_display?: unknown;
-	issue_title?: unknown;
-	issue_type?: unknown;
-	issue_metadata?: unknown;
-	issue_short_id?: unknown;
-	issue_permalink?: unknown;
-	issue_status?: unknown;
-	issue_project_slug?: unknown;
-	issue_platform?: unknown;
-	issue_first_seen?: unknown;
-	issue_last_seen?: unknown;
-	issue_count?: unknown;
-	issue_level?: unknown;
-
-	issue_url_alias?: unknown;
-
-	issue_is_unhandled?: unknown;
-
-	issue_assigned_to?: unknown;
-
-	issue_seen_by?: unknown;
-
-	issue_annotations?: unknown;
-
-	issue_share_id?: unknown;
-
-	issue_owners?: unknown;
-
-	issue_suspect_commits?: unknown;
-
-	issue_num_comments?: unknown;
-
-	issue_num_users?: unknown;
-
-	issue_user_count?: unknown;
-
-	issue_first_release?: unknown;
-
-	issue_first_release_version?: unknown;
-
-	issue_last_release?: unknown;
-
-	issue_last_release_version?: unknown;
-
-	issue_last_commit?: unknown;
-
-	issue_latest_event?: unknown;
-
-	issue_is_public?: unknown;
-
-	issue_has_seen?: unknown;
-
-	issue_has_user_report?: unknown;
-
-	issue_is_unresolved?: unknown;
-
-	issue_is_ignored?: unknown;
-
-	issue_is_filtered?: unknown;
-
-	issue_is_regression?: unknown;
-
-	issue_is_reviewed?: unknown;
-
-	issue_priority?: unknown;
-
-	issue_type_display?: unknown;
-
-	issue_platforms?: unknown;
-
-	issue_owner?: unknown;
-
-	issue_latest_release?: unknown;
-
-	issue_short_id_display?: unknown;
-
-	issue_permalink_alias?: unknown;
-
-	issue_issue_id?: unknown;
-
-	issue_project?: unknown;
-
-	issue_occurrence_id?: unknown;
-
-	issue_event_id?: unknown;
-
-	issue_archive?: unknown;
-
-	issue_priority_reason?: unknown;
-
-	issue_suspect_spans?: unknown;
-
-	issue_breakdowns?: unknown;
-
-	issue_perf_info?: unknown;
-
-	issue_request?: unknown;
-
-	issue_frames?: unknown;
-
-	issue_profiling_trace?: unknown;
-
-	issue_profile_id?: unknown;
-
-	issue_profile?: unknown;
-
-	issue_device_classification?: unknown;
-
-	issue_key_id?: unknown;
-
-	issue_location?: unknown;
-
-	issue_message?: string;
-	level?: string; // "error", "warning", etc.
-	location?: string | null;
-	logger?: string;
-	message?: string;
-	metadata?: SentryEventMetadata;
+// Issue payload observed in production webhooks (Issue Alerts)
+export interface SentryIssueProject {
+	id: string;
+	name: string;
+	slug: string;
 	platform?: string;
-	project?: number;
-	received?: number;
-	release?: string | null;
-	request?: SentryEventRequest;
-	sdk?: SentryEventSdk;
-	tags?: [string, string][];
-	time_spent?: number | null;
-	timestamp?: number;
-	title?: string;
+}
+
+export interface SentryIssueMetadata {
+	value?: string;
+	type?: string;
+	filename?: string;
+	function?: string;
+	in_app_frame_mix?: string;
+	sdk?: { name: string; name_normalized?: string };
+	initial_priority?: number;
+	[key: string]: unknown;
+}
+
+export interface SentryIssue {
+	id: string; // e.g. "64857638"
+	shortId?: string; // e.g. "APP-1C"
+	title: string;
+	culprit?: string;
+	permalink?: string;
+	url?: string; // API URL
+	web_url?: string; // Web URL
+	project: SentryIssueProject;
+	level?: string; // "error", "warning", etc.
+	status?: string;
+	substatus?: string;
 	type?: string; // "error"
-	url?: string; // API URL for event
-	user?: SentryUser;
-	version?: string | number;
-	web_url?: string; // web url for event
+	platform?: string;
+	isPublic?: boolean;
+	isBookmarked?: boolean;
+	isSubscribed?: boolean;
+	hasSeen?: boolean;
+	isUnhandled?: boolean;
+	annotations?: unknown[];
+	metadata?: SentryIssueMetadata;
+	issueType?: string;
+	issueCategory?: string;
+	priority?: string;
+	count?: string | number;
+	firstSeen?: string; // ISO string
+	lastSeen?: string; // ISO string
+	numComments?: number;
+	userCount?: number;
 }
 
 export interface SentryIssueAlertWebhookData {
-	event: SentryEvent;
-	triggered_rule: string;
+	// In practice for our installation, Sentry sends an issue object, not an event
+	issue: SentryIssue;
+	// Some installations may include these fields; keep optional for flexibility
+	event?: unknown;
+	triggered_rule?: string;
 	issue_alert?: SentryIssueAlertMeta; // Present for alert rule action UI components
 }
 
 export interface SentryIssueAlertWebhook {
-	action: 'triggered';
+	action: "created";
 	actor: SentryWebhookActor;
 	data: SentryIssueAlertWebhookData;
 	installation: SentryInstallation;
 }
-
-

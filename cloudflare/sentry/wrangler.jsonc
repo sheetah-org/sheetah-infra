@@ -16,11 +16,12 @@
 	/**
 	 * Environment Variables
 	 * Non-sensitive config can go in "vars"; secrets must be set via `wrangler secret put`.
+	 * NOTE: Sensitive configs are put here because Wrangler overrides the ones set in the dashboard on each deploy
 	 */
 	"vars": {
-		"SENTRY_WEBHOOK_SECRET": "",
-		"SLACK_BOT_TOKEN": "",
-		"SLACK_DEFAULT_CHANNEL": ""
+		"SENTRY_WEBHOOK_SECRET": "807ef06f3ab58372c53df2ecbc733b968c4911435c29ea47b43c1e2c9bb0bda1",
+		"SLACK_DEFAULT_CHANNEL": "C09FUUYM2MT",
+		"SLACK_BOT_TOKEN": "xoxb-6784603089298-9541391379602-oQuharRWAV00GWYpLsiPdGzo"
 	}
 	/**
 	 * Smart Placement

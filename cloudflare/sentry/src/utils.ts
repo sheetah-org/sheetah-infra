@@ -1,10 +1,14 @@
 import * as crypto from "node:crypto";
 
-export function verifySignature(request: Request, secret = "") {
+export async function verifySignature(
+  signature: string,
+  rawBody: string,
+  secret = "",
+) {
   const hmac = crypto.createHmac("sha256", secret);
-  hmac.update(JSON.stringify(request.body), "utf8");
+  hmac.update(rawBody, "utf8");
   const digest = hmac.digest("hex");
-  return digest === request.headers.get("sentry-hook-signature");
+  return digest === signature;
 }
 
 type LogLevel = "debug" | "info" | "warning" | "error";
